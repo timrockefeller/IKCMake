@@ -1,6 +1,7 @@
 message(STATUS "import IKInit.cmake")
-include("${CMAKE_CURRENT_LIST_DIR}/IKConfig.cmake")
 
+include("${CMAKE_CURRENT_LIST_DIR}/IKConfig.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/IKPackage.cmake")
 set(IKCMAKE_VERSION 0.1.0)
 
 macro(IK_InitProject PROJECT_NAME_STR)

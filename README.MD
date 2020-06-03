@@ -12,7 +12,7 @@
 
 将所有子目录加入项目处理过程。
 
-##### IK_SetupProject(TARGET_NAME STR_TARGET_SOURCES STR_TARGET_LIBS)
+##### IK_SetupProject(MODE TARGET_NAME STR_TARGET_SOURCES STR_TARGET_LIBS)
 
 生成单个目标文件。
 

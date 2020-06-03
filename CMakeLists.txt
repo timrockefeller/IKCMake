@@ -21,3 +21,5 @@ link_directories (
     # $ENV{XXX_LIB_PATH}
     # ...
 )
+
+IK_AddSubDirsRec(src)
