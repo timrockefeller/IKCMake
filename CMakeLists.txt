@@ -1,13 +1,12 @@
-cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
-
-project (TiMake VERSION 0.0.1)
-message(STATUS "[Project] ${PROJECT_NAME} ${PROJECT_VERSION}")
+cmake_minimum_required(VERSION 3.11)
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
 include(IKInit)
 
-IK_InitProject()
+IK_InitProject("Example_Project")
+
+message(STATUS "[Project] ${PROJECT_NAME} ${PROJECT_VERSION}")
 
 include_directories (
     ${PROJECT_SOURCE_DIR}/include

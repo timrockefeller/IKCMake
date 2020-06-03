@@ -1,8 +1,11 @@
 message(STATUS "import IKInit.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/IKConfig.cmake")
 
+set(IKCMAKE_VERSION 0.1.0)
+
 macro(IK_InitProject PROJECT_NAME_STR)
-set(PROJECT_NAME PROJECT_NAME_STR)
+message(STATUS "[IKCmake] ${IKCMAKE_VERSION}")
+set(PROJECT_NAME ${PROJECT_NAME_STR})
 IK_InitConfig()
 project(${PROJECT_NAME} VERSION 0.1.0 LANGUAGES C CXX)
 # The version number.
@@ -17,7 +20,7 @@ set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
 
 
-endmacro(IK_InitProject)
+endmacro(IK_InitProject PROJECT_NAME_STR)
 
 
 #---------------------------------------
