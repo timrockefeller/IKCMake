@@ -13,8 +13,25 @@ function(IK_AddSubDirsRec path)
   endforeach()
 endfunction()
 
+### IK_UnityArgs
+## (tarLIST STR1 STR2 ...)
+## -> tarLIST = "STR1 STR2 ..."
+function(IK_UnityArgs)
+    set(arglist "")
+    set(IK_INDEX 1)
+    if(${ARGC} LESS 2)
+        set(${ARGV0} " " PARENT_SCOPE)
+    else()
+        while(IK_INDEX LESS ${ARGC})
+            list(APPEND arglist ${ARGV${IK_INDEX}})
+            math(EXPR IK_INDEX "${IK_INDEX} + 1")  
+        endwhile()
+        set(${ARGV0} ${arglist} PARENT_SCOPE)
+    endif()
+endfunction(IK_UnityArgs)
+
 ### Setup Target
-## 
+##  TODO setup target with less options, seperate by extensions
 ## 
 
 function(IK_SetupTarget)

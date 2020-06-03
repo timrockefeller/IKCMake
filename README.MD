@@ -21,4 +21,8 @@
 - `STR_TARGET_SOURCES`：源文件，若空请留一个空格
 - `STR_TARGET_LIBS`：链接库，若空请留一个空格
 
+##### IK_UnityArgs(<TARGET_STR> [arg1 [arg2 [...]]])
+
+创建变量以适配IK_SetupProject。
+
 ##### Anything else when using CMake
