@@ -8,5 +8,4 @@ IK_UnityArgs(STR_TARGET_SOURCES
 IK_UnityArgs(STR_TARGET_LIBS
     # libs
 )
-message(STATUS "[United]"${STR_TARGET_LIBS})
 IK_SetupProject(${MODE} ${TARGET_NAME} ${STR_TARGET_SOURCES} ${STR_TARGET_LIBS})
