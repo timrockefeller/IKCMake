@@ -1,4 +1,4 @@
-#---------------------------------------
+﻿#---------------------------------------
 macro(IK_SetupProject MODE TARGET_NAME STR_TARGET_SOURCES STR_TARGET_LIBS)
   IK_PackageName(package_name)
   string(REPLACE " " ";" LIST_TARGET_SOURCES ${STR_TARGET_SOURCES})
