@@ -65,7 +65,10 @@ function(IK_AddPackage name version)
     list(APPEND IK_${PROJECT_NAME}_dep_name_list ${name})
     list(APPEND IK_${PROJECT_NAME}_dep_version_list ${version})
     message(STATUS "find package: ${name} ${version}...")
-    find_package(${name} ${version} QUIET)
+    ## todo: parse as `[\d.]*\d`
+    if(NOT ${version} STREQUAL "HEAD")
+      find_package(${name} ${version} QUIET)
+    endif()
     if(${${name}_FOUND})
       message(STATUS "OK: ${name} ${${name}_VERSION} found.")
     else()
@@ -113,7 +116,7 @@ include_directories(\"\${include_dir}\")\n")
 
   include(CMakePackageConfigHelpers)
   # generate the config file that is includes the exports
-  configure_package_config_file(${PROJECT_SOURCE_DIR}/config/Config.cmake.in
+  configure_package_config_file(${PROJECT_SOURCE_DIR}/cmake/config/Config.cmake.in
     "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
     INSTALL_DESTINATION "${package_name}/cmake"
     NO_SET_AND_CHECK_MACRO
