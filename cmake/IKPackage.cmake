@@ -65,7 +65,6 @@ function(IK_AddPackage name version)
     list(APPEND IK_${PROJECT_NAME}_dep_name_list ${name})
     list(APPEND IK_${PROJECT_NAME}_dep_version_list ${version})
     message(STATUS "find package: ${name} ${version}...")
-    ## todo: parse as `[\d.]*\d`
     if(NOT ${version} STREQUAL "HEAD")
       find_package(${name} ${version} QUIET)
     endif()
@@ -75,7 +74,7 @@ function(IK_AddPackage name version)
     include(FetchContent)
       message(STATUS "- fetching ${name}...")
       set(IKIT_GIT_TAG  ${version})  # 指定版本
-      set(IKIT_GIT_URL  "https://github.com/timrockefeller/${name}.git")  # 指定git仓库地址
+      set(IKIT_GIT_URL  "git@github.com:timrockefeller/${name}.git")  # 指定git仓库地址
       FetchContent_Declare(
         ${name}
         GIT_REPOSITORY    ${IKIT_GIT_URL}
@@ -101,14 +100,14 @@ include_directories(\"\${include_dir}\")\n")
     # generate the export targets for the build tree
     # needs to be after the install(TARGETS) command
     export(EXPORT "${PROJECT_NAME}Targets"
-      NAMESPACE "KTKR::"
+      NAMESPACE "IIK::"
       #FILE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Targets.cmake"
     )
     
     # install the configuration targets
     install(EXPORT "${PROJECT_NAME}Targets"
       FILE "${PROJECT_NAME}Targets.cmake"
-      NAMESPACE "KTKR::"
+      NAMESPACE "IIK::"
       DESTINATION "${package_name}/cmake"
     )
   endif()

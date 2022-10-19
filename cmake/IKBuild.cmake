@@ -38,7 +38,7 @@ function(IK_GlobGroupSrcs rst _sources)
 	foreach(path ${${_sources}})
     if(IS_DIRECTORY ${path})
       file(GLOB_RECURSE pathSources
-        ${path}/*.h
+        #${path}/*.h
         ${path}/*.hpp
         ${path}/*.inl
         ${path}/*.c
@@ -75,20 +75,21 @@ function(IK_AddTarget)
   # TARGET_NAME
   # RET_TARGET_NAME
   # [list]
-  # SRC: dir | file | current_dir(default)
-  # INC: dir
-  # LIB: <lib-target> | *.lib
+  # SRC [SRC_PVT|SRC_INT]: dir | file | current_dir(default)
+  # INC [INC_PVT|INC_INT]: dir
+  # LIB [LIB_PVT|LIB_INT]: <lib-target> | *.lib
+  # DEF [DEF_PVT|DEF_INT]: defines
   # C_OPTION: compile options
   # L_OPTION: link options
   message(STATUS "┌────────────────────────────────────────────────┐")
   set(arglist "")
 
   # publics
-  list(APPEND arglist SRC_PUB INC LIB C_OPTION L_OPTION)
+  list(APPEND arglist SRC_PUB INC LIB DEF C_OPTION L_OPTION)
   # interfaces
-  list(APPEND arglist SRC_INT INC_INT LIB_INT C_OPTION_INT L_OPTION_INT)
+  list(APPEND arglist SRC_INT INC_INT LIB_INT DEF_INT C_OPTION_INT L_OPTION_INT)
   # privates
-  list(APPEND arglist SRC INC_PVT LIB_PVT C_OPTION_PVT L_OPTION_PVT)
+  list(APPEND arglist SRC INC_PVT LIB_PVT DEF_PVT C_OPTION_PVT L_OPTION_PVT)
 
   cmake_parse_arguments(
     "ARG"
@@ -107,6 +108,7 @@ function(IK_AddTarget)
     list(APPEND ARG_SRC_INT       ${ARG_SRC_PUB}      ${ARG_SRC}          )
     list(APPEND ARG_INC_INT       ${ARG_INC}          ${ARG_INC_PVT}      )
     list(APPEND ARG_LIB_INT       ${ARG_LIB}          ${ARG_LIB_PVT}      )
+    list(APPEND ARG_DEF_INT       ${ARG_DEF}          ${ARG_DEF_PVT}      )
     list(APPEND ARG_C_OPTION_INT  ${ARG_C_OPTION}     ${ARG_C_OPTION_PVT} )
     list(APPEND ARG_L_OPTION_INT  ${ARG_L_OPTION}     ${ARG_L_OPTION_PVT} )
     set(ARG_SRC_PUB      "")
@@ -115,6 +117,8 @@ function(IK_AddTarget)
     set(ARG_INC_PVT      "")
     set(ARG_LIB          "")
     set(ARG_LIB_PVT      "")
+    set(ARG_DEF          "")
+    set(ARG_DEF_PVT      "")
     set(ARG_C_OPTION     "")
     set(ARG_C_OPTION_PVT "")
     set(ARG_L_OPTION     "")
@@ -178,20 +182,20 @@ function(IK_AddTarget)
   # add target
   if("${ARG_MODE}" STREQUAL "EXE")
     add_executable(${target_name})
-    add_executable("KTKR::${target_name}" ALIAS ${target_name})
+    add_executable("IIK::${target_name}" ALIAS ${target_name})
     if(MSVC)
       set_target_properties(${target_name} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${IK_RootProjectPath}/bin")
     endif()
     set_target_properties(${target_name} PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
   elseif("${ARG_MODE}" STREQUAL "STATIC")
     add_library(${target_name} STATIC)
-    add_library("KTKR::${target_name}" ALIAS ${target_name})
+    add_library("IIK::${target_name}" ALIAS ${target_name})
   elseif("${ARG_MODE}" STREQUAL "SHARED")
     add_library(${target_name} SHARED)
-    add_library("KTKR::${target_name}" ALIAS ${target_name})
+    add_library("IIK::${target_name}" ALIAS ${target_name})
   elseif("${ARG_MODE}" STREQUAL "INTERFACE")
     add_library(${target_name} INTERFACE)
-    add_library("KTKR::${target_name}" ALIAS ${target_name})
+    add_library("IIK::${target_name}" ALIAS ${target_name})
   else()
     message(FATAL_ERROR "Unknown mode [${ARG_MODE}].")
     return()
@@ -235,7 +239,7 @@ function(IK_AddTarget)
     PRIVATE ${ARG_LIB_PVT}
   )
 
- # target include files
+  # target include files
   foreach(inc ${ARG_INC})
     get_filename_component(abs_inc ${inc} ABSOLUTE)
     file(RELATIVE_PATH rel_inc ${PROJECT_SOURCE_DIR} ${abs_inc})
@@ -244,7 +248,7 @@ function(IK_AddTarget)
       $<INSTALL_INTERFACE:${package_name}/${rel_inc}>
     )
   endforeach()
-    foreach(inc ${ARG_INC_PVT})
+  foreach(inc ${ARG_INC_PVT})
     get_filename_component(abs_inc ${inc} ABSOLUTE)
     file(RELATIVE_PATH rel_inc ${PROJECT_SOURCE_DIR} ${abs_inc})
     target_include_directories(${target_name} PRIVATE
@@ -252,13 +256,24 @@ function(IK_AddTarget)
       $<INSTALL_INTERFACE:${package_name}/${rel_inc}>
     )
   endforeach()
-    foreach(inc ${ARG_INC_INT})
+  foreach(inc ${ARG_INC_INT})
     get_filename_component(abs_inc ${inc} ABSOLUTE)
     file(RELATIVE_PATH rel_inc ${PROJECT_SOURCE_DIR} ${inc})
     target_include_directories(${target_name} INTERFACE
       $<BUILD_INTERFACE:${abs_inc}>
       $<INSTALL_INTERFACE:${package_name}/${rel_inc}>
     )
+  endforeach()
+
+  # target definations
+  foreach(def ${ARG_DEF})
+    target_compile_definitions(${target_name} PUBLIC ${def})
+  endforeach()
+  foreach(def ${ARG_DEF_PVT})
+    target_compile_definitions(${target_name} PRIVATE ${def})
+  endforeach()
+  foreach(def ${ARG_DEF_INT})
+    target_compile_definitions(${target_name} INTERFACE ${def})
   endforeach()
 
   # target compile option
