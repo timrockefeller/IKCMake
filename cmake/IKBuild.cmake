@@ -258,7 +258,7 @@ function(IK_AddTarget)
   endforeach()
   foreach(inc ${ARG_INC_INT})
     get_filename_component(abs_inc ${inc} ABSOLUTE)
-    file(RELATIVE_PATH rel_inc ${PROJECT_SOURCE_DIR} ${inc})
+    file(RELATIVE_PATH rel_inc ${PROJECT_SOURCE_DIR} ${abs_inc})
     target_include_directories(${target_name} INTERFACE
       $<BUILD_INTERFACE:${abs_inc}>
       $<INSTALL_INTERFACE:${package_name}/${rel_inc}>
